@@ -1,0 +1,22 @@
+[Unit]
+Description=Theoros reflection pipeline (daily Claude synthesis of session summaries)
+Documentation=file:///opt/theoros/docs/spec.md
+# Reads distilled sessions from the local SQLite database and calls the
+# Claude API, so it needs network.  No hard dependency on capture or
+# distillation — it just reads whatever sessions already exist.
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/theoros
+ExecStart=/opt/theoros/.venv/bin/python -m theoros.workers.reflection
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/opt/theoros/.env
+StandardOutput=journal
+StandardError=journal
+
+# Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+PrivateTmp=true

@@ -1,0 +1,24 @@
+[Unit]
+Description=Theoros capture service
+Documentation=file:///opt/theoros/README.md
+Documentation=file:///opt/theoros/docs/spec.md
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/theoros
+ExecStart=/opt/theoros/.venv/bin/python -m theoros.services.capture
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

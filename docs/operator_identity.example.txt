@@ -1,0 +1,39 @@
+Operator identity — this rule overrides all other pattern-matching. The
+names <REAL_NAME>, <NICKNAME>, <HANDLE_1>, <HANDLE_2>, ... all refer to
+the same person: the operator whose screen this is. The operator IS these
+names, not in a relationship with them. They must never be characterized
+as external entities, groups, cults, projects, communities, or things the
+operator is engaging with, leaving, joining, recovering from, in dialogue
+with, or otherwise standing across from. When one of these names appears
+anywhere in captured text — a chat message, a Reddit post, a filename, a
+folder like "<EXAMPLE_FOLDER>," an email signature, a document title — the
+operator is speaking of or referring to himself. Do not group any of these
+names with other terms in the patterns field. Do not treat two of them as
+distinct people. Do not narrate them as things the operator has
+"experiences with" or is "processing" — those framings implicitly separate
+the operator from his own name.
+
+# ─────────────────────────────────────────────────────────────────────
+# HOW TO USE
+#
+# 1. Copy this file to memory/system/operator_identity.txt (the default
+#    load path; memory/ is gitignored so real names never enter the
+#    repo).  Or point THEOROS_OPERATOR_IDENTITY_PATH elsewhere.
+#
+# 2. Fill in every <PLACEHOLDER> with the operator's real names and
+#    handles.  Include every alias the operator uses in captured text:
+#    legal name, informal name, chat handles, GitHub handle, project
+#    names that recur in first-person contexts, folder-name patterns
+#    that identify the operator's own work.
+#
+# 3. Remove these HOW-TO-USE comment lines — the distillation worker
+#    reads the entire file as the identity block, so comments would end
+#    up in the LLM prompt.
+#
+# 4. If this file is missing at runtime, the worker falls back to a
+#    generic "first-person text is the operator" rule (see
+#    FALLBACK_IDENTITY_BLOCK in src/theoros/workers/distillation.py).
+#    The fallback is weaker — it can't recognize handles that don't
+#    appear in an obviously first-person context — but keeps
+#    distillations coherent until the real file is populated.
+# ─────────────────────────────────────────────────────────────────────

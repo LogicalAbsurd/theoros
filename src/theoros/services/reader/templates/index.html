@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page">
+    <h1>Reflections</h1>
+</header>
+
+{% if reflections %}
+<ul class="reflections">
+    {% for r in reflections %}
+    {% set slug = r.period_start | date %}
+    <li class="reflection {{ r.timeframe }}">
+        <a href="/{{ r.timeframe }}/{{ slug }}">
+            <span class="cadence">{{ r.timeframe }}</span>
+            <span class="range">
+                {% if r.timeframe == "daily" %}
+                    {{ r.period_start | date }}
+                {% else %}
+                    {{ r.period_start | date }} — {{ r.period_end | date }}
+                {% endif %}
+            </span>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="empty">No reflections yet.</p>
+{% endif %}
+{% endblock %}

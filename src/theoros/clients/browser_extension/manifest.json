@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Theoros Capture",
+  "version": "0.1.0",
+  "description": "Captures clean page text to the local Theoros capture service.",
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png"
+    }
+  },
+
+  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "host_permissions": [
+    "http://127.0.0.1:8765/*",
+    "*://*/*"
+  ],
+
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "theoros-capture@localhost"
+    }
+  }
+}

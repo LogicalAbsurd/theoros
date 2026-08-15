@@ -1,0 +1,39 @@
+# Theoros dependencies
+# Populated as phases are built. See README / CLAUDE.md for current phase.
+
+# Phase 2a: capture service
+fastapi              # ASGI framework for the capture API
+uvicorn[standard]    # ASGI server; [standard] pulls in uvloop + httptools
+pydantic             # Request/response validation (also a FastAPI dependency)
+pydantic-settings    # Typed config from env vars, consistent with FastAPI idiom
+python-dotenv        # .env file loading (used by pydantic-settings)
+
+# Phase 2b: window-meta daemon (KWin → D-Bus → capture service)
+dasbus               # D-Bus client/server via GLib (GDBus); chosen over
+                     # dbus-next because the GLib main loop pairs naturally
+                     # with KDE/Plasma.  Requires PyGObject (python3-gobject
+                     # system package on Fedora, or pip install pygobject
+                     # with system headers).
+
+# Phase 2c: OCR catchall
+pytesseract==0.3.13  # Python wrapper for Tesseract OCR.  Requires the
+                     # tesseract system binary (tesseract on Fedora:
+                     # sudo dnf install tesseract tesseract-langpack-eng).
+# Other
+anthropic            # For calls to Claude
+
+# Phase 4: promotion of curated outputs to Supabase (reflections first;
+# session summaries, observations, embeddings to follow).  Local capture
+# and raw records stay in SQLite — only distilled/interpreted outputs
+# leave the machine, per docs/spec.md.
+supabase             # supabase-py; wraps PostgREST + auth in one client
+
+# Phase 5: reader service (phone-friendly view of promoted reflections).
+# Server-rendered HTML; no client-side framework.  markdown converts
+# the promoted reflection bodies to HTML at request time; jinja2 is the
+# templating engine FastAPI's Jinja2Templates wraps.  PyJWT is already
+# transitively present through the capture auth path but listed
+# explicitly here since the reader depends on it directly.
+jinja2               # Server-side templating for the reader
+markdown             # Reflection body markdown → HTML
+PyJWT[crypto]        # Cloudflare Access JWT validation (reader + capture)

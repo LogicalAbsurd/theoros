@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page">
+    <p class="crumbs"><a href="/">← reflections</a></p>
+    <h1>{{ page_title }}</h1>
+    <p class="meta">
+        {{ reflection.claude_model }} · {{ reflection.prompt_template_version }}
+    </p>
+</header>
+
+<article class="body">
+    {{ body_html | safe }}
+</article>
+{% endblock %}

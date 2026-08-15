@@ -1,0 +1,33 @@
+[Unit]
+Description=Theoros OCR capture daemon (periodic screenshot + tesseract)
+Documentation=file:///opt/theoros/docs/spec.md
+# Needs the capture service up so it can POST events to it.
+# Subscribes to window-meta's D-Bus signal for idle detection but
+# degrades gracefully if window-meta is absent — After for ordering,
+# no Requires so the OCR daemon can run standalone.
+After=theoros-capture.service theoros-window-meta.service
+Requires=theoros-capture.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/theoros
+ExecStart=/opt/theoros/.venv/bin/python -m theoros.clients.ocr_daemon
+Environment=PYTHONUNBUFFERED=1
+# Same reboot fix as window-meta: user systemd doesn't inherit
+# DBUS_SESSION_BUS_ADDRESS at boot, so the SessionMessageBus lookup
+# for the window-meta idle signal silently fails and idle detection
+# degrades to "always active" until the next manual restart.
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=%t/bus
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

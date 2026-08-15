@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Theoros</string>
+    <string name="accessibility_service_description">Theoros observes window focus changes to build a personal memory archive. No data leaves your device until you grant network permission separately.</string>
+</resources>

@@ -1,0 +1,16 @@
+[Unit]
+Description=Weekly trigger for Theoros reflection pipeline
+Documentation=file:///opt/theoros/docs/spec.md
+
+[Timer]
+# Fire once a week on Sunday at 05:00 local time — one hour after the
+# daily-reflection timer, so the final daily of the completed Sun-Sat
+# week (which reflects on Saturday's activity) has already landed in
+# the reflections table.  Reflects on the calendar week that ended the
+# previous night; window boundaries are computed inside reflection.py
+# using THEOROS_REFLECTION_TIMEZONE.
+OnCalendar=Sun *-*-* 05:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

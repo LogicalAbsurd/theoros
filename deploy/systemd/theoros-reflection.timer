@@ -1,0 +1,12 @@
+[Unit]
+Description=Daily trigger for Theoros reflection pipeline
+Documentation=file:///opt/theoros/docs/spec.md
+
+[Timer]
+# Fire once daily at 04:00 local time — after a full night's worth of
+# sessions have been captured and distilled.
+OnCalendar=*-*-* 04:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

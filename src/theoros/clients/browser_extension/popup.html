@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 220px;
+      margin: 0;
+      padding: 12px;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 13px;
+      color: #1a1a1a;
+    }
+    .state-active {
+      color: #2e7d32;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .state-paused {
+      color: #757575;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 8px 0;
+      border: none;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    .btn:last-child {
+      margin-bottom: 0;
+    }
+    .btn-pause {
+      background: #e65100;
+      color: #fff;
+    }
+    .btn-pause:hover {
+      background: #bf360c;
+    }
+    .btn-resume {
+      background: #2e7d32;
+      color: #fff;
+    }
+    .btn-resume:hover {
+      background: #1b5e20;
+    }
+    .btn-capture {
+      background: #f5f5f5;
+      color: #1a1a1a;
+      border: 1px solid #ccc;
+    }
+    .btn-capture:hover:not(:disabled) {
+      background: #e0e0e0;
+    }
+    .btn-capture:disabled {
+      color: #999;
+      cursor: default;
+    }
+    .btn-exclude {
+      background: #f5f5f5;
+      color: #1a1a1a;
+      border: 1px solid #ccc;
+    }
+    .btn-exclude:hover:not(:disabled) {
+      background: #e0e0e0;
+    }
+    .btn-exclude:disabled {
+      color: #999;
+      cursor: default;
+    }
+    .manage-link {
+      display: block;
+      text-align: center;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #555;
+      cursor: pointer;
+    }
+    .manage-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div id="state-text" class="state-active">Theoros is active</div>
+  <button id="toggle-btn" class="btn btn-pause">Pause Theoros</button>
+  <button id="exclude-btn" class="btn btn-exclude">Exclude this site</button>
+  <button id="capture-btn" class="btn btn-capture">Capture this page now</button>
+  <a id="manage-link" class="manage-link">Manage exclusions</a>
+  <script src="popup.js"></script>
+</body>
+</html>

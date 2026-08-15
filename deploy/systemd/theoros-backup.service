@@ -1,0 +1,36 @@
+[Unit]
+Description=Theoros nightly backup (encrypted DB + reflections snapshot to HDD and cloud)
+Documentation=file:///opt/theoros/docs/backup-setup.md
+# Needs network for the rclone upload to Google Drive.  No hard
+# dependency on the capture worker — the SQLite Backup API cooperates
+# with WAL-mode writers so a live capture service does not block or
+# corrupt the snapshot.
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/theoros
+ExecStart=/opt/theoros/.venv/bin/python scripts/backup.py
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/opt/theoros/.env
+StandardOutput=journal
+StandardError=journal
+
+# Sandboxing.  ProtectHome=false because the script reads the age
+# recipient file from ~/.config/theoros/ and rclone reads its config
+# from ~/.config/rclone/.  ProtectSystem=strict remounts the whole
+# filesystem hierarchy read-only, so /mnt/backup needs an explicit
+# ReadWritePaths hole for the HDD copy to work.
+#
+# PrivateTmp is DISABLED deliberately: with it enabled, systemd mounts
+# fresh tmpfs at both /tmp and /var/tmp for this service, and the
+# ~4 GB intermediate DB snapshot would live entirely in RAM (observed
+# 4.9 G RSS + 1.8 G swap peak).  The script now targets a repo-local
+# scratch dir under memory/system/.backup-tmp/ instead, so the
+# snapshot lands on the real disk and PrivateTmp buys us nothing.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+PrivateTmp=false
+ReadWritePaths=/mnt/backup

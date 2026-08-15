@@ -1,0 +1,18 @@
+[Unit]
+Description=Nightly trigger for Theoros encrypted backup
+Documentation=file:///opt/theoros/docs/backup-setup.md
+
+[Timer]
+# Fire at 03:30 local time — before the 04:00 reflection pipeline so a
+# fresh backup exists whenever the day's reflection runs, and late
+# enough that most sessions are already distilled.  The SQLite Backup
+# API is safe against concurrent writes, so the 04:00 reflection can
+# overlap with a slow cloud upload without issue.
+OnCalendar=*-*-* 03:30:00
+# Persistent=true means a missed run (laptop asleep at 03:30) fires on
+# the next wake — important for a backup, which we don't want to skip
+# just because the machine wasn't up.
+Persistent=true
+
+[Install]
+WantedBy=timers.target

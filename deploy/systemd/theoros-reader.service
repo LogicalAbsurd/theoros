@@ -1,0 +1,23 @@
+[Unit]
+Description=Theoros reader service (phone-friendly reflections view)
+Documentation=file:///opt/theoros/docs/spec.md
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/theoros
+ExecStart=/opt/theoros/.venv/bin/python -m theoros.services.reader
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,28 @@
+[Unit]
+Description=Theoros distillation worker (session summaries via local LLM)
+Documentation=file:///opt/theoros/docs/spec.md
+# Needs capture for raw event access. Runs after session-detector so
+# sessions exist to distill, but degrades gracefully if the detector
+# is absent — After for ordering, no Requires.
+After=theoros-capture.service theoros-session-detector.service
+Requires=theoros-capture.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/theoros
+ExecStart=/opt/theoros/.venv/bin/python -m theoros.workers.distillation
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/opt/theoros/.env
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,29 @@
+[Unit]
+Description=Theoros weekly reflection pipeline (Claude synthesis of the week's daily reflections)
+Documentation=file:///opt/theoros/docs/spec.md
+# Reads prior daily reflections from the local SQLite database and calls
+# the Claude API, so it needs network.  No hard dependency on the daily
+# reflection unit — the weekly is scheduled to run one hour after the
+# final daily of the week (Sun 04:00), and if that daily is missing the
+# weekly will note "X of 7" and reflect on what's there.
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/theoros
+ExecStart=/opt/theoros/.venv/bin/python -m theoros.workers.reflection
+Environment=PYTHONUNBUFFERED=1
+# THEOROS_REFLECTION_PERIOD_TYPE switches reflection.py's run_reflection()
+# onto the weekly branch: calendar-week window in
+# THEOROS_REFLECTION_TIMEZONE, source = prior daily reflections rather
+# than raw sessions, WEEKLY_SYSTEM_PROMPT to Claude.
+Environment=THEOROS_REFLECTION_PERIOD_TYPE=weekly
+EnvironmentFile=/opt/theoros/.env
+StandardOutput=journal
+StandardError=journal
+
+# Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+PrivateTmp=true

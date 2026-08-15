@@ -1,0 +1,33 @@
+[Unit]
+Description=Theoros reflection catch-up (boot-time backfill of missed dailies + weekly)
+Documentation=file:///opt/theoros/docs/spec.md
+# Answers "did anything get missed while the machine was off?" — a
+# different question from the scheduled 04:00 timer, and kept as a
+# separate unit so one breaking doesn't take down the other.
+# Needs network for the Claude API calls; no hard dependency on
+# capture/distillation since it reads whatever sessions and dailies
+# already exist in the local DB.
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/theoros
+ExecStart=/opt/theoros/.venv/bin/python -m theoros.workers.reflection_catchup
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/opt/theoros/.env
+StandardOutput=journal
+StandardError=journal
+
+# Sandboxing — mirrors theoros-reflection.service.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+PrivateTmp=true
+
+[Install]
+# Installed under --user systemd (matching the other Theoros units), so
+# "boot" here means "user session start" — fine for a single-user
+# machine.  Idempotent: _daily_exists / _weekly_exists guard against
+# re-generating rows that already cover the target periods.
+WantedBy=default.target

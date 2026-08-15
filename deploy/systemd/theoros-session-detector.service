@@ -1,0 +1,25 @@
+[Unit]
+Description=Theoros session detector (idle-threshold grouping of raw events)
+Documentation=file:///opt/theoros/docs/spec.md
+# Reads raw events written by the capture service.
+After=theoros-capture.service
+Requires=theoros-capture.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/theoros
+ExecStart=/opt/theoros/.venv/bin/python -m theoros.workers.session_detector
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

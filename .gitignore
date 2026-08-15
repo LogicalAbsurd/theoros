@@ -1,0 +1,66 @@
+# ── Python ─────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# ── Secrets (never commit) ─────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Per-operator working context (not code) ────────────
+# CLAUDE.md carries the operator's personal preferences,
+# aliases, and register.  Copy CLAUDE.example.md to
+# CLAUDE.md and fill it in for your own working context.
+CLAUDE.md
+*.key
+*.pem
+credentials.json
+secrets/
+
+# ── Theoros: local data is NOT code ────────────────────
+# Memory contents are generated at runtime and live only
+# on this machine. The schemas that produce them ARE
+# versioned (in src/); the data itself is not.
+# Memory contents are runtime data, not code. Only the skeleton
+# (.gitkeep files) is tracked to preserve the directory structure.
+memory/**
+!memory/**/
+!memory/**/.gitkeep
+*.db
+*.sqlite
+*.sqlite3
+logs/
+*.log
+
+# ── Local backups from one-off scripts ─────────────────
+scripts/*_backup.json
+
+# ── Editor / OS ────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Build / packaging ──────────────────────────────────
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+session.txt
+typescript

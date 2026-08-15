@@ -1,0 +1,44 @@
+-- =============================================================================
+-- Migration 005: lcp_deltas
+-- Date:          2026-04-27
+-- Phase:         2 (Capture — mutating-page redesign)
+--
+-- Adds lcp_length to raw_events, replacing the strict-prefix delta model
+-- (migration 004) with a Longest Common Prefix (LCP) model.
+--
+-- The strict-prefix model assumed new content always started with the prior's
+-- full text verbatim.  Real web pages have volatile tail elements (timestamps,
+-- notification counts, live counters) that break the prefix match and trigger
+-- false-positive breakpoints — splitting what should be a single chain into
+-- many disconnected ones.
+--
+-- The LCP model instead records how many leading characters the new content
+-- shares with the prior's full reconstructed text.  delta_text then holds
+-- everything from that LCP boundary onward.  Reconstruction at row N:
+-- take row (N-1)'s reconstructed text, truncate to lcp_length, append
+-- delta_text.
+--
+-- Chain identity also changes in this migration's accompanying code (not in
+-- SQL): chains are now identified by (tab_session_id, source_identifier)
+-- rather than by prefix-match success.  Breakpoints are eliminated — if the
+-- tab session and URL match, it's the same chain.  See db.py for details.
+--
+-- Column added:
+--   lcp_length  INTEGER, nullable.
+--     For continuation rows: the number of characters from the prior row's
+--     full reconstructed text that this row preserved as a prefix.
+--     For chain roots: NULL (semantically unused; root has no prior).
+--
+-- Backfill: left to a separate Python script.  Under the old strict-prefix
+-- model, continuation rows preserved the entire prior text as a prefix, so
+-- lcp_length = len(prior_full_text).  Computing that requires walking each
+-- chain — not feasible in pure SQL.  Existing rows with lcp_length = NULL
+-- are handled correctly by the updated reconstruct_chain_text(), which
+-- falls back to the old append-only logic when lcp_length is absent.
+--
+-- This migration uses ALTER TABLE ADD COLUMN rather than the 12-step
+-- recreate pattern: SQLite supports ADD COLUMN for a nullable column with
+-- no default, and we have no computed backfill to apply in SQL.
+-- =============================================================================
+
+ALTER TABLE raw_events ADD COLUMN lcp_length INTEGER;

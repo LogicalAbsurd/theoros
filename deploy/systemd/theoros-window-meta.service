@@ -1,0 +1,32 @@
+[Unit]
+Description=Theoros window-meta capture daemon (KWin D-Bus listener)
+Documentation=file:///opt/theoros/docs/phase-2b-kwin-architecture.md
+Documentation=file:///opt/theoros/docs/spec.md
+# Needs the capture service up so it can POST events to it.
+After=theoros-capture.service
+Requires=theoros-capture.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/theoros
+ExecStart=/opt/theoros/.venv/bin/python -m theoros.clients.window_meta_daemon
+Environment=PYTHONUNBUFFERED=1
+# User systemd starts before the graphical session exports
+# DBUS_SESSION_BUS_ADDRESS into its environment, so the daemon can't
+# find the session bus at boot and crash-loops.  %t is the user
+# runtime dir ($XDG_RUNTIME_DIR), which is where the session bus
+# socket lives on modern Fedora / systemd setups.
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=%t/bus
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

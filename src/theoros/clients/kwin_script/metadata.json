@@ -1,0 +1,11 @@
+{
+     "KPackageStructure": "KWin/Script",
+     "KPlugin": {
+        "Id": "theoros-window-meta",
+        "Name": "Theoros Window Meta",
+        "Description": "Reports window focus changes to the Theoros capture daemon via D-Bus",
+        "Version": "0.1.0"
+    },
+    "X-Plasma-API": "javascript",
+    "X-Plasma-MainScript": "code/main.js"
+}
